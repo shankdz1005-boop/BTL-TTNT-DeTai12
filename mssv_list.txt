@@ -1,0 +1,4 @@
+# Mỗi dòng một MSSV, mỗi MSSV sinh ra một mê cung (đề yêu cầu >= 3 mê cung).
+072206011102
+072206006638
+064205002462
