@@ -9,8 +9,8 @@
 # vòng lặp ở đây (và trong maze_env.run_episode) đếm số lần robot thực sự di chuyển.
 
 import argparse
-import importlib
 
+from run_experiments import import_algo
 from shared_api import DIRECTIONS
 from maze_env import (MazeEnv, maze_size_from_mssv, seed_from_mssv,
                       generate_maze, shortest_path_length)
@@ -37,7 +37,7 @@ def main():
     ap.add_argument("--loop-prob", type=float, default=0.08)
     args = ap.parse_args()
 
-    fn = importlib.import_module("algorithms." + args.algo).choose_action
+    fn = import_algo(args.algo).choose_action
     if args.demo_trap:
         maze, start, goal = TRAP, (2, 2), (2, 6)
         title = "mê cung minh họa (bẫy chữ U) 5x7"

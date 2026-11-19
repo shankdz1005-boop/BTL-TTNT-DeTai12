@@ -13,8 +13,7 @@ import os
 
 from maze_env import (MazeEnv, maze_size_from_mssv, seed_from_mssv,
                       generate_maze, shortest_path_length)
-from run_experiments import ALGORITHMS, read_mssv_file
-import importlib
+from run_experiments import ALGORITHMS, read_mssv_file, import_algo
 
 
 def run_trace(fn, maze, start, goal, limit):
@@ -58,10 +57,10 @@ def main():
     algos = []
     for label, module_name, owner in ALGORITHMS:
         try:
-            fn = importlib.import_module(f"algorithms.{module_name}").choose_action
+            fn = import_algo(module_name).choose_action
         except ModuleNotFoundError as exc:
-            if exc.name == f"algorithms.{module_name}":
-                print(f"[THIẾU] {label}: chưa có algorithms/{module_name}.py, bỏ qua")
+            if exc.name == module_name:
+                print(f"[THIẾU] {label}: chưa có {module_name}.py, bỏ qua")
                 continue
             raise
         runs = [run_trace(fn, mz["grid"], tuple(mz["start"]), tuple(mz["goal"]), mz["limit"])

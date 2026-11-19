@@ -28,6 +28,16 @@ ALGORITHMS = [
 ]
 
 
+def import_algo(module_name):
+    """Nạp thuật toán từ algorithms/<tên>.py; nếu không có thư mục algorithms thì tìm <tên>.py cùng thư mục."""
+    try:
+        return importlib.import_module(f"algorithms.{module_name}")
+    except ModuleNotFoundError as exc:
+        if exc.name not in (f"algorithms.{module_name}", "algorithms"):
+            raise
+        return importlib.import_module(module_name)
+
+
 def check_api(fn):
     """Kiểm tra nhanh hàm có tuân thủ API chung không. Trả về danh sách cảnh báo."""
     problems = []
@@ -64,10 +74,10 @@ def load_algorithms():
     loaded = []
     for label, module_name, owner in ALGORITHMS:
         try:
-            module = importlib.import_module(f"algorithms.{module_name}")
+            module = import_algo(module_name)
         except ModuleNotFoundError as exc:
-            if exc.name == f"algorithms.{module_name}":
-                print(f"[THIẾU]  {label:<14} chưa có algorithms/{module_name}.py ({owner})")
+            if exc.name == module_name:
+                print(f"[THIẾU]  {label:<14} chưa có {module_name}.py ({owner})")
                 continue
             raise
         fn = getattr(module, "choose_action", None)
